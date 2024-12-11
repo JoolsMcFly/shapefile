@@ -429,4 +429,18 @@ class ShapeFileTest extends TestCase
         $shp->setAllowNoDbf(true);
         self::assertTrue($shp->loadFromFile('data/no-dbf.*'));
     }
+
+    public function testMaxNumberRecords(): void
+    {
+        if (! ShapeFile::supportsDbase()) {
+            self::markTestSkipped('dbase extension missing');
+        }
+
+        $this->createTestData();
+
+        $shp = new ShapeFile(ShapeType::Point);
+        $shp->setMaxRecords(5);
+        $shp->loadFromFile('data/mexico.*');
+        self::assertCount(5, $shp->records);
+    }
 }

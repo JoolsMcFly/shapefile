@@ -83,6 +83,8 @@ class ShapeFile
 
     private bool $allowNoDbf = false;
 
+    private bool|int $maxRecords = false;
+
     /**
      * Checks whether dbase manipulations are supported.
      */
@@ -106,6 +108,11 @@ class ShapeFile
         ],
         public string|null $fileName = null,
     ) {
+    }
+
+    public function setMaxRecords(int|bool $max): void
+    {
+        $this->maxRecords = $max;
     }
 
     public function setAllowNoDbf(bool $allowNoDbf): void
@@ -492,6 +499,10 @@ class ShapeFile
             }
 
             $this->records[] = $record;
+
+            if ($this->maxRecords !== false && count($this->records) > $this->maxRecords) {
+                return true;
+            }
         }
 
         return true;
